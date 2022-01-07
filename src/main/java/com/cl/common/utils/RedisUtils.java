@@ -4,6 +4,7 @@ import io.lettuce.core.Range;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.ScoredValue;
+import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -380,6 +381,30 @@ public final class RedisUtils {
         return getCommands().decrby(key, amount);
     }
 
+    /**
+     * 执行lua脚本
+     *
+     * @param luaScript lua脚本
+     * @param keys      keys
+     * @param args      args
+     * @param clazz     返回值类型
+     * @return 结果
+     */
+    public static <T> T eval(String luaScript, String[] keys, String[] args, Class<T> clazz) {
+
+        ScriptOutputType scriptOutputType;
+        if (Integer.class.equals(clazz) || Long.class.equals(clazz)) {
+            scriptOutputType = ScriptOutputType.INTEGER;
+        } else if (Boolean.class.equals(clazz)) {
+            scriptOutputType = ScriptOutputType.BOOLEAN;
+        } else if (String.class.equals(clazz)) {
+            scriptOutputType = ScriptOutputType.VALUE;
+        } else {
+            throw new UnsupportedOperationException("");
+        }
+
+        return getCommands().eval(luaScript, scriptOutputType, keys, args);
+    }
     //endregion
 
     //region 通用命令
