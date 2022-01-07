@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -216,6 +217,7 @@ public final class HttpUtils {
                 .setConnectTimeout(CONNECT_TIMEOUT)
                 .setSocketTimeout(SOCKET_TIMEOUT)
                 .setProxy(proxy)
+                .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
                 .build();
     }
 }
